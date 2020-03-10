@@ -1,0 +1,135 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	layout:decorate="~{layouts/baseLayout}">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<title>Početna stranica</title>
+
+<style>
+.carousel-control-prev, .carousel-control-next {
+	width: 25%;
+}
+</style>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+	rel="stylesheet">
+<style>
+.bg-company-gray {
+	background-color: lightslategray;
+}
+</style>
+
+<style>
+
+.form-rounded {
+border-radius: 1rem;
+}
+</style>
+
+<script>
+	$(document)
+			.ready(
+					function() {
+						$("#forma")
+								.submit(
+										function() {
+											$("#slanje")
+													.append(
+															'<p class="alert alert-primary" style="width:40%;"}><strong>Slanje poruke u tijeku.</strong> Molimo pričekajte...</p>')
+
+										});
+
+					});
+</script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		setTimeout(function() {
+			$('#poruka').fadeOut();
+		}, 5000);
+	});
+</script>
+
+
+</head>
+<body>
+
+	<div layout:fragment="content">
+
+		<div class="container-fluid bg-secondary">
+			<div th:include="header :: header"></div>
+		</div>
+
+		<div class="container bg-white">
+			<br> <br>
+
+		</div>
+
+		<div align="center">
+			<h4>Kontaktirajte nas putem email-a</h4>
+		</div>
+		<br>
+
+
+		<form class="form" id="forma" th:action="@{/kontakt}" method="post"
+			th:object="${kontakt}">
+			<div sec:authorize="isAnonymous()">
+
+				<div class="form-group" align="center">
+					<label for="ime">Ime: </label> <input type="text" required
+						class="form-control form-rounded" id=" ime" name="ime" style="width: 300px;"
+						placeholder="Upišite ime" th:value="*{ime}">
+				</div>
+				<div class="form-group" align="center">
+					<label for="prezime">Prezime: </label> <input type="text" required
+						class="form-control form-rounded" id=" prezime" name="prezime"
+						style="width: 300px;" placeholder="Upišite ime"
+						th:value="*{prezime}">
+				</div>
+				<div class="form-group" align="center">
+					<label for="emailResend">E-mail: </label> <input type="email"
+						required class="form-control form-rounded" id=" emailResend" name="email"
+						style="width: 300px;" placeholder="Upišite email"
+						th:value="*{email}">
+				</div>
+			</div>
+			<div sec:authorize="isAuthenticated()" align="center">
+				<label for="imeAprez"><p>
+						<th:text sec:authentication="principal.firstName" />
+						<th:text sec:authentication="principal.lastName" />
+						, napišite željenu poruku. Administratori će vam odgovoriti u najkraćem
+						mogućem roku.
+					</p> </label>
+			</div>
+			<div class="form-group" align="center">
+				<label for="poruka">Poruka: </label>
+				<textarea class="form-control form-rounded" id=" poruka" name="text" rows="5"
+					style="width: 60%;" placeholder="Upišite poruku..." required
+					th:value="*{text}"></textarea>
+			</div>
+			<br>
+			<div class="form-group" align="center">
+				<button type="submit" class="btn btn-primary">Pošalji</button>
+			</div>
+
+			<div class="form-group" id="slanje" align="center"></div>
+
+			<div class="form-group" id="poruka" align="center"
+				th:switch="${provjera}">
+				<p class="alert alert-success" style="width: 40%;" th:case="'1'">
+					<strong>Poruka uspješno poslana.</strong>
+				</p>
+				<p class="alert alert-danger" style="width: 40%;" th:case="'2'">Poruka
+					nije uspješno poslana. Pokušajte ponovno.</p>
+			</div>
+
+
+		</form>
+
+
+
+	</div>
+</body>
+</html>

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	layout:decorate="~{layouts/baseLayout}">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Upravljanje</title>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#table1, #table2, #table3, #table4').DataTable({
+			responsive : true,
+			"language" : {
+				"sEmptyTable" : "Nema podataka u tablici",
+				"sInfo" : "Prikazano _START_ do _END_ od _TOTAL_ rezultata",
+				"sInfoEmpty" : "Prikazano 0 do 0 od 0 rezultata",
+				"sInfoFiltered" : "(filtrirano iz _MAX_ ukupnih rezultata)",
+				"sInfoPostFix" : "",
+				"sInfoThousands" : ",",
+				"sLengthMenu" : "Prikaži _MENU_ rezultata po stranici",
+				"sLoadingRecords" : "Dohvaćam...",
+				"sProcessing" : "Obrađujem...",
+				"sSearch" : "Pretraži:",
+				"sZeroRecords" : "Ništa nije pronađeno",
+				"oPaginate" : {
+					"sFirst" : "Prva",
+					"sPrevious" : "Nazad",
+					"sNext" : "Naprijed",
+					"sLast" : "Zadnja"
+				},
+				"oAria" : {
+					"sSortAscending" : ": aktiviraj za rastući poredak",
+					"sSortDescending" : ": aktiviraj za padajući poredak"
+				}
+			}
+		});
+
+	});
+</script>
+
+<script type="text/javascript">
+	function preSubmit() {
+		$('#textAppended').remove();
+		$('.textAppended').remove();
+		$(".ukloniKlasa").attr("disabled", true);
+		$(".dodajKlasa").attr("disabled", true);
+		$('#infoTextId')
+				.append(
+						'<div id="textAppended" class="alert alert-success"><strong>Uklanjanje se izvršava.</strong> Molimo pričekajte...</div>');
+		return true;
+	};
+	function preSubmitModal() {
+		$('.textAppendedToButton').remove();
+		$('.textAppended').remove();
+		$(".ukloniKlasa").attr("disabled", true);
+		$(".dodajKlasa").attr("disabled", true);
+		$('.buttonTextId')
+				.append(
+						'<div class="textAppendedToButton alert alert-success"><strong>Dodavanje u tijeku.</strong> Molimo pričekajte...</div>');
+		return true;
+	};
+</script>
+</head>
+<body>
+	<div layout:fragment="content">
+
+		<div class="container-fluid bg-secondary">
+			<div th:include="header :: header"></div>
+		</div>
+
+		<div class="container-fluid">
+			<div class="row">
+				<nav id="navId"
+					class="col-sm-3 col-md-2 d-none d-sm-block bg-light sidebar"
+					th:include="sidebar :: sidebar"></nav>
+
+				<main id="contentId" role="main"
+					class="col-sm-9 ml-sm-auto col-md-10 pt-3"> <br></br>
+				<h3 class="text-center" style="margin-bottom: 25px;">Upravljanje
+					smještajem</h3>
+				<nav>
+					<div class="justify-content-center nav nav-tabs" id="nav-tab"
+						role="tablist">
+
+						<a th:classappend="${objektiActiveClass}" class="nav-item nav-link" id="nav-link1-tab"
+							data-toggle="tab" href="#nav-link1" role="tab"
+							aria-controls="nav-link1" aria-selected="true">Objekti</a> <a
+							th:classappend="${tipoviActiveClass}" class="nav-item nav-link" id="nav-link2-tab" data-toggle="tab"
+							href="#nav-link2" role="tab" aria-controls="nav-link2"
+							aria-selected="false">Tipovi</a> <a th:classappend="${smjJedActiveClass}" class="nav-item nav-link"
+							id="nav-link3-tab" data-toggle="tab" href="#nav-link3" role="tab"
+							aria-controls="nav-link3" aria-selected="false">Smještajne
+							jedinice</a> <a th:classappend="${dodUslActiveClass}"  class="nav-item nav-link" id="nav-link4-tab"
+							data-toggle="tab" href="#nav-link4" role="tab"
+							aria-controls="nav-link4" aria-selected="false">Dodatne
+							usluge</a>
+					</div>
+				</nav>
+				<div class="tab-content" id="nav-tabContent">
+
+					<div id="infoTextId">
+						<br></br>
+					</div>
+					
+					<div th:switch="${dodaj}">
+						<div th:case="'1'" class="textAppended text-center alert alert-success">
+							<strong>Vaš zahtjev je uspješno izvršen! </strong>
+						</div>
+					</div>
+					
+					<div th:classappend="${objektiShowClass}" class="tab-pane fade" id="nav-link1"
+						role="tabpanel" aria-labelledby="nav-link1-tab">
+						<br></br>
+						<div class="row table-responsive justify-content-center"
+							style="padding: 15px">
+							<table id="table1" class="table"
+								th:if="${not #lists.isEmpty(objektList)}">
+								<thead>
+									<tr>
+										<th>Naziv objekta</th>
+										<th></th>
+									</tr>
+								</thead>
+
+								<tbody>
+									<tr th:each="objekt : ${objektList}">
+										<td th:text="${objekt.nazObjekta}"></td>
+										<td>
+											<form action="#" onsubmit="return preSubmit()"
+												th:action="@{'/ukloni/objekt/' + ${objekt.idObjekta}}"
+												method="post">
+												<button type="submit" class="ukloniKlasa btn btn-danger">Ukloni</button>
+											</form>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<p th:if="${#lists.isEmpty(objektList)}">Nije dodan niti
+								jedan objekt</p>
+						</div>
+
+						<div class="row justify-content-center">
+							<div th:include="noviObjektModal :: noviObjektModal"></div>
+						</div>
+					</div>
+
+
+					<div th:classappend="${dodUslShowClass}" class="tab-pane fade" id="nav-link4" role="tabpanel"
+						aria-labelledby="nav-link4-tab">
+						<br></br>
+						<div class="row table-responsive justify-content-center"
+							style="padding: 15px">
+							<table id="table2" class="table"
+								th:if="${not #lists.isEmpty(uslugeList)}">
+								<thead>
+									<tr>
+										<th>Naziv usluge</th>
+										<th></th>
+									</tr>
+								</thead>
+
+								<tbody>
+									<tr th:each="usluga : ${uslugeList}">
+										<td th:text="${usluga.nazUsluge}"></td>
+										<td>
+											<form action="#" onsubmit="return preSubmit()"
+												th:action="@{'/ukloni/usluga/' + ${usluga.idUsluge}}"
+												method="post">
+												<button type="submit" class="ukloniKlasa btn btn-danger">Ukloni</button>
+											</form>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<p th:if="${#lists.isEmpty(uslugeList)}">Nije dodana niti
+								jedna dodatna usluga</p>
+						</div>
+
+						<div class="row justify-content-center">
+							<div th:include="novaUslugaModal :: novaUslugaModal"></div>
+						</div>
+					</div>
+
+					<div th:classappend="${tipoviShowClass}" class="tab-pane fade" id="nav-link2" role="tabpanel"
+						aria-labelledby="nav-link2-tab">
+						<br></br>
+						<div class="row table-responsive justify-content-center"
+							style="padding: 15px">
+							<table id="table3" class="table"
+								th:if="${not #lists.isEmpty(tipSmjestJedList)}">
+								<thead>
+									<tr>
+										<th>Tip smještajne jedinice</th>
+										<th>Pogled</th>
+										<th>Kapacitet</th>
+										<th></th>
+									</tr>
+								</thead>
+
+								<tbody>
+									<tr th:each="tip : ${tipSmjestJedList}">
+										<td th:text="${tip.tipSmjestJed}"></td>
+										<td th:text="${tip.pogled}"></td>
+										<td th:text="${tip.kapacitetOd} + '-' + ${tip.kapacitetDo}"></td>
+										<td>
+											<form action="#" onsubmit="return preSubmit()"
+												th:action="@{'/ukloni/tip/' + ${tip.idTipSmjestJed}}"
+												method="post">
+												<button type="submit" class="ukloniKlasa btn btn-danger">Ukloni</button>
+											</form>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<p th:if="${#lists.isEmpty(tipSmjestJedList)}">Nije dodan
+								niti jedan tip smještajne jedinice</p>
+						</div>
+
+						<div class="row justify-content-center">
+							<div th:include="noviTipModal :: noviTipModal"></div>
+						</div>
+					</div>
+
+					<div th:classappend="${smjJedShowClass}" class="tab-pane fade" id="nav-link3" role="tabpanel"
+						aria-labelledby="nav-link3-tab">
+						<br></br>
+						<div class="row table-responsive justify-content-center"
+							style="padding: 15px">
+							<table id="table4" class="table"
+								th:if="${not #lists.isEmpty(smjestJedList)}">
+								<thead>
+									<tr>
+										<th>Naziv</th>
+										<th>Tip</th>
+										<th>Pogled</th>
+										<th>Kapacitet</th>
+										<th>Objekt</th>
+										<th>Kat</th>
+										<th></th>
+									</tr>
+								</thead>
+
+								<tbody>
+									<tr th:each="smjestJed : ${smjestJedList}">
+										<td th:text="${smjestJed.nazSmjestJed}"></td>
+										<td th:text="${smjestJed.tipSmjestJed.tipSmjestJed}"></td>
+										<td th:text="${smjestJed.tipSmjestJed.pogled}"></td>
+										<td
+											th:text="${smjestJed.tipSmjestJed.kapacitetOd} + '-' + ${smjestJed.tipSmjestJed.kapacitetDo}"></td>
+										<td th:text="${smjestJed.objekt.nazObjekta}"></td>
+										<td th:text="${smjestJed.kat}"></td>
+										<td>
+											<form action="#" onsubmit="return preSubmit()"
+												th:action="@{'/ukloni/smjestajnaJedinica/' + ${smjestJed.idSmjestJed}}"
+												method="post">
+												<button type="submit" class="ukloniKlasa btn btn-danger">Ukloni</button>
+											</form>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<p th:if="${#lists.isEmpty(smjestJedList)}">Nije dodana niti
+								jedna smještajna jedinica</p>
+						</div>
+
+						<div
+							th:if="${not #lists.isEmpty(tipSmjestJedList) and not #lists.isEmpty(objektList)}"
+							class="row justify-content-center">
+							<div th:include="novaSmjestJedModal :: novaSmjestJedModal"></div>
+						</div>
+						<div
+							th:if="${#lists.isEmpty(tipSmjestJedList) or #lists.isEmpty(objektList)}"
+							class="row justify-content-center">
+							<p>Prvo trebate dodati objekte i tipove smještajnih jedinica</p>
+						</div>
+					</div>
+				</div>
+				</main>
+			</div>
+		</div>
+
+	</div>
+</body>
+</html>

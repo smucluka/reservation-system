@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	layout:decorate="~{layouts/baseLayout}">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Pregled rezervacija</title>
+
+<script>
+	$(function() {
+		$(".kalendar").datepicker(
+				{
+					beforeShowDay : function(date) {
+
+						if (date.getMonth() == 04 || date.getMonth() == 05
+								|| date.getMonth() == 06
+								|| date.getMonth() == 07
+								|| date.getMonth() == 08) {
+							return [ true, '' ];
+						}
+						return [ false, '' ];
+
+					},
+					closeText : "Zatvori",
+					prevText : "&#x3C;",
+					nextText : "&#x3E;",
+					currentText : "Danas",
+					minDate : -1,
+					monthNames : [ "Siječanj", "Veljača", "Ožujak", "Travanj",
+							"Svibanj", "Lipanj", "Srpanj", "Kolovoz", "Rujan",
+							"Listopad", "Studeni", "Prosinac" ],
+					monthNamesShort : [ "Sij", "Velj", "Ožu", "Tra", "Svi",
+							"Lip", "Srp", "Kol", "Ruj", "Lis", "Stu", "Pro" ],
+					dayNames : [ "Nedjelja", "Ponedjeljak", "Utorak",
+							"Srijeda", "Četvrtak", "Petak", "Subota" ],
+					dayNamesShort : [ "Ned", "Pon", "Uto", "Sri", "Čet", "Pet",
+							"Sub" ],
+					dayNamesMin : [ "Ne", "Po", "Ut", "Sr", "Če", "Pe", "Su" ],
+					weekHeader : "Tje",
+					dateFormat : "dd.mm.yy.",
+					firstDay : 1,
+					isRTL : false,
+					showMonthAfterYear : false,
+					yearSuffix : ""
+				});
+
+	});
+
+	$(function() {
+		$(".kalOd").on("change", function() {
+			var selected = $(this).val();
+			$(".kalDo").datepicker("option", "minDate", selected);
+		});
+		$(".kalDo").on("change", function() {
+			var selected = $(this).val();
+			$(".kalOd").datepicker("option", "maxDate", selected);
+		});
+	});
+</script>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(".urediKlasa").click(function() {
+
+			$('.mojCb').prop('checked', false);
+			$('.mojCb').attr("checked", "false");
+			var id = $(this).attr('id');
+			$('#rezInputId')["0"].value = id;
+			$('#korisnikInputId')["0"].value = $('#korId-' + id)["0"].innerText;
+			$('#trenActive')["0"].value = $('#status' + id)["0"].innerText;
+			var tip = $('#tp-' + id)["0"].innerText;
+			var datOd = $('#od-' + id)["0"].innerText;
+			var datDo = $('#do-' + id)["0"].innerText;
+			var brOdraslih = $('#odr-' + id)["0"].innerText;
+			var brDjece01 = $('#01-' + id)["0"].innerText;
+			var brDjece27 = $('#27-' + id)["0"].innerText;
+			var brDjece814 = $('#814-' + id)["0"].innerText;
+
+			var dodUsl = $('#dodusl-' + id)["0"].innerText;
+			var dodUsl = dodUsl.substring(1, dodUsl.length - 1);
+			
+			var usluge = dodUsl.split(",");
+			for (i = 0; i < usluge.length; i++) {
+				usluge[i] = usluge[i].trim();
+				$('#d-' + usluge[i]).prop('checked', true);
+				$('#d-' + usluge[i]).attr("checked", "true");
+			}
+
+			$('#tip').val(tip);
+			$('#datepickerOd').val(datOd);
+			$('#datepickerDo').val(datDo);
+			$('#brOdraslih').val(brOdraslih);
+			$('#brDj01').val(brDjece01);
+			$('#brDj27').val(brDjece27);
+			$('#brDj814').val(brDjece814);
+
+		});
+
+		$('#trueTable, #falseTable, #notTable').DataTable({
+			responsive : true,
+			"language" : {
+				"sEmptyTable" : "Nema podataka u tablici",
+				"sInfo" : "Prikazano _START_ do _END_ od _TOTAL_ rezultata",
+				"sInfoEmpty" : "Prikazano 0 do 0 od 0 rezultata",
+				"sInfoFiltered" : "(filtrirano iz _MAX_ ukupnih rezultata)",
+				"sInfoPostFix" : "",
+				"sInfoThousands" : ",",
+				"sLengthMenu" : "Prikaži _MENU_ rezultata po stranici",
+				"sLoadingRecords" : "Dohvaćam...",
+				"sProcessing" : "Obrađujem...",
+				"sSearch" : "Pretraži:",
+				"sZeroRecords" : "Ništa nije pronađeno",
+				"oPaginate" : {
+					"sFirst" : "Prva",
+					"sPrevious" : "Nazad",
+					"sNext" : "Naprijed",
+					"sLast" : "Zadnja"
+				},
+				"oAria" : {
+					"sSortAscending" : ": aktiviraj za rastući poredak",
+					"sSortDescending" : ": aktiviraj za padajući poredak"
+				}
+			}
+		});
+
+	});
+
+	function preSubmit() {
+		$('#textAppended').remove();
+		$('.rezPr').remove();
+		$('#infoTextId').remove();
+		$(".potvrdiKlasa, .ponistiKlasa, .urediKlasa").attr("disabled", true);
+		$('.infoText')
+				.append(
+						'<div id="textAppended" class="alert alert-success"><strong>Zahtjev se izvršava.</strong> Molimo pričekajte...</div>');
+		return true;
+	};
+
+	function prePromjeni() {
+		$('#textAppendedModal').remove();
+		$('#infoTextId').remove();
+		$('.rezPr').remove();
+		$(".potvrdiKlasa, .ponistiKlasa, .urediKlasa, .btnPromjeni").attr(
+				"disabled", true);
+		$('.buttonText')
+				.append(
+						'<div id="textAppendedModal" class="alert alert-success"><strong>Zahtjev se izvršava.</strong> Molimo pričekajte...</div>');
+		return true;
+	};
+
+	function fixNumber(event) {
+		var x = event.charCode;
+		if (x >= 48 && x <= 57) {
+			return x;
+		} else {
+			event.preventDefault();
+			return;
+		}
+	}
+
+	function fixKapacitet(e) {
+		e.value = parseInt(e.value, 10);
+	}
+</script>
+
+
+
+</head>
+<body>
+	<div layout:fragment="content">
+
+		<div class="container-fluid bg-secondary">
+			<div th:include="header :: header"></div>
+		</div>
+
+		<div class="container-fluid">
+			<div class="row">
+				<nav id="navId"
+					class="col-sm-3 col-md-2 d-none d-sm-block bg-light sidebar"
+					th:include="sidebar :: sidebar"></nav>
+
+				<main id="contentId" role="main"
+					class="col-sm-9 ml-sm-auto col-md-10 pt-3">
+					<br></br>
+				<h3 class="text-center" style="margin-bottom: 25px;">Rezervacije</h3>
+
+				<nav>
+					<div class="justify-content-center nav nav-tabs" id="nav-tab" role="tablist">
+
+						<a th:classappend="${nonActiveClass}" class="nav-item nav-link" id="nav-link1-tab"
+							data-toggle="tab" href="#nav-link1" role="tab"
+								aria-controls="nav-link1" aria-selected="true">Nepotvrđene</a> <a
+							th:classappend="${potActiveClass}" class="nav-item nav-link" id="nav-link2-tab" data-toggle="tab"
+							href="#nav-link2" role="tab" aria-controls="nav-link2"
+							aria-selected="false">Potvrđene</a> <a th:classappend="${odbActiveClass}" class="nav-item nav-link"
+							id="nav-link3-tab" data-toggle="tab" href="#nav-link3" role="tab"
+							aria-controls="nav-link3" aria-selected="false">Odbijene/poništene</a>
+					</div>
+				</nav>
+
+				<div class="tab-content" id="nav-tabContent">
+					<br></br>
+					<div id="infoTextId">
+					</div>
+					
+					<div class="infoText"></div>
+					<div class="rezPr" th:if="${rezPromjene != '-'}">
+						<div class="alert alert-danger">
+							<strong th:text="${rezPromjene}"></strong>
+						</div>
+					</div>
+					<div class="rezPr" th:if="${rezPromjeneUspjeh != '+'}">
+						<div class="alert alert-success">
+							<strong th:text="${rezPromjeneUspjeh}"></strong>
+						</div>
+					</div>
+
+					<div th:classappend="${nonShowClass}" class="tab-pane fade" id="nav-link1"
+						role="tabpanel" aria-labelledby="nav-link1-tab">
+						<div style="padding: 30px;"
+							class="table-responsive row justify-content-center">
+							<table id="falseTable" class="table"
+								th:if="${not #lists.isEmpty(rezervacijeFalseList)}">
+								<thead>
+									<tr>
+										<th style="display:none;"></th>
+										<th style="display:none;"></th>
+										<th></th>
+										<th>Korisnik</th>
+										<th style="display: none;"></th>
+										<th>Smještajna jedinica</th>
+										<th>Broj odraslih</th>
+										<th>Broj djece 0-1</th>
+										<th>Broj djece 2-7</th>
+										<th>Broj djece 8-14</th>
+										<th>Datum od</th>
+										<th>Datum do</th>
+										<th style="display: none;"></th>
+										<th>Dodatne usluge</th>
+										<th sec:authorize="hasAuthority('ADMIN')"></th>
+									</tr>
+								</thead>
+
+								<tbody>
+									<tr th:each="rez : ${rezervacijeFalseList}">
+										<td th:id="'korId-'+${rez.rezervacijaID}" th:text="${rez.korisnik.idKorisnika}" style="display:none;"></td>
+										<td th:id="'status'+${rez.rezervacijaID}" th:text="${rez.status}" style="display:none;"></td>
+										<td th:text="${rez.datRez}"></td>
+										<td
+											th:utext="${rez.korisnik.ime} + ' ' + ${rez.korisnik.prezime} + '&lt;br /&gt;' + ${rez.korisnik.email} + '&lt;br /&gt;' + ${rez.korisnik.brTelefona} + 
+				            		'&lt;br /&gt;' + ${rez.korisnik.ulicaKbr} + ', ' + ${rez.korisnik.grad}  + ', ' + ${rez.korisnik.drzava} "></td>
+										<td style="display: none;" th:id="'tp-'+${rez.rezervacijaID}"
+											th:text="${rez.smjJed.tipSmjestJed.idTipSmjestJed}">
+										<td
+											th:text="${rez.smjJed.tipSmjestJed.tipSmjestJed} + ' ' + ${rez.smjJed.nazSmjestJed}"></td>
+										<td th:id="'odr-'+${rez.rezervacijaID}"
+											th:text="${rez.brOdraslih}"></td>
+										<td th:id="'01-'+${rez.rezervacijaID}"
+											th:text="${rez.brDjece0_1}"></td>
+										<td th:id="'27-'+${rez.rezervacijaID}"
+											th:text="${rez.brDjece2_7}"></td>
+										<td th:id="'814-'+${rez.rezervacijaID}"
+											th:text="${rez.brDjece8_14}"></td>
+										<td th:id="'od-'+${rez.rezervacijaID}" th:text="${rez.datOd}"></td>
+										<td th:id="'do-'+${rez.rezervacijaID}" th:text="${rez.datDo}"></td>
+										<td style="display: none;"
+											th:id="'dodusl-'+${rez.rezervacijaID}"
+											th:text="${rez.dodUsluge}"></td>
+										<td th:if="${not #lists.isEmpty(rez.dodUslugeOpis)}">
+											<div th:each="du : ${rez.dodUslugeOpis}">
+												<p th:utext="${du} + '&lt;br /&gt;' "></p>
+											</div>
+										</td>
+										<td th:if="${#lists.isEmpty(rez.dodUslugeOpis)}">
+											<p>Nisu zatražene</p>
+										</td>
+										<td sec:authorize="hasAuthority('ADMIN')"
+											style="align: center;">
+
+											<div class="text-center">
+
+												<button sec:authorize="hasAuthority('ADMIN')"
+													th:id="${rez.rezervacijaID}" type="button"
+													class="urediKlasa btn btn-secondary" data-toggle="modal"
+													data-target="#urediModal">Uredi</button>
+												<form sec:authorize="hasAuthority('ADMIN')"
+													onsubmit="return preSubmit()" action="#"
+													th:action="@{'/pregledRezervacija/ponisti/' + ${rez.rezervacijaID} +'/' + ${rez.korisnik.idKorisnika} +'/' + 0}"
+													method="post">
+													<button style="margin-top: 5px;" type="submit"
+														class="ponistiKlasa btn btn-danger">Poništi</button>
+												</form>
+												<form sec:authorize="hasAuthority('ADMIN')"
+													onsubmit="return preSubmit()" action="#"
+													th:action="@{'/pregledRezervacija/potvrdi/' + ${rez.rezervacijaID} +'/' + ${rez.korisnik.idKorisnika} +'/' + 0}"
+													method="post">
+													<button style="margin-top: 5px;" type="submit"
+														class="potvrdiKlasa btn btn-success">Potvrdi</button>
+												</form>
+
+											</div>
+										</td>
+
+									</tr>
+								</tbody>
+							</table>
+							<p th:if="${#lists.isEmpty(rezervacijeFalseList)}">Nema
+								nepotvrđenih rezervacija.</p>
+						</div>
+					</div>
+
+					<div th:classappend="${potShowClass}" class="tab-pane fade" id="nav-link2"
+						role="tabpanel" aria-labelledby="nav-link2-tab">
+						
+						<div style="padding: 30px;"
+							class="table-responsive row justify-content-center">
+							<table id="falseTable" class="table"
+								th:if="${not #lists.isEmpty(rezervacijeTrueList)}">
+								<thead>
+									<tr>
+										<th style="display:none;"></th>
+										<th style="display:none;"></th>
+										<th></th>
+										<th>Korisnik</th>
+										<th style="display: none;"></th>
+										<th>Smještajna jedinica</th>
+										<th>Broj odraslih</th>
+										<th>Broj djece 0-1</th>
+										<th>Broj djece 2-7</th>
+										<th>Broj djece 8-14</th>
+										<th>Datum od</th>
+										<th>Datum do</th>
+										<th style="display: none;"></th>
+										<th>Dodatne usluge</th>
+										<th sec:authorize="hasAuthority('ADMIN')"></th>
+									</tr>
+								</thead>
+
+								<tbody>
+									<tr th:each="rez : ${rezervacijeTrueList}">
+										<td th:id="'korId-'+${rez.rezervacijaID}" th:text="${rez.korisnik.idKorisnika}" style="display:none;"></td>
+										<td th:id="'status'+${rez.rezervacijaID}" th:text="${rez.status}" style="display:none;"></td>
+										<td th:text="${rez.datRez}"></td>
+										<td
+											th:utext="${rez.korisnik.ime} + ' ' + ${rez.korisnik.prezime} + '&lt;br /&gt;' + ${rez.korisnik.email} + '&lt;br /&gt;' + ${rez.korisnik.brTelefona} + 
+				            		'&lt;br /&gt;' + ${rez.korisnik.ulicaKbr} + ', ' + ${rez.korisnik.grad}  + ', ' + ${rez.korisnik.drzava} "></td>
+										<td style="display: none;" th:id="'tp-'+${rez.rezervacijaID}"
+											th:text="${rez.smjJed.tipSmjestJed.idTipSmjestJed}">
+										<td
+											th:text="${rez.smjJed.tipSmjestJed.tipSmjestJed} + ' ' + ${rez.smjJed.nazSmjestJed}"></td>
+										<td th:id="'odr-'+${rez.rezervacijaID}"
+											th:text="${rez.brOdraslih}"></td>
+										<td th:id="'01-'+${rez.rezervacijaID}"
+											th:text="${rez.brDjece0_1}"></td>
+										<td th:id="'27-'+${rez.rezervacijaID}"
+											th:text="${rez.brDjece2_7}"></td>
+										<td th:id="'814-'+${rez.rezervacijaID}"
+											th:text="${rez.brDjece8_14}"></td>
+										<td th:id="'od-'+${rez.rezervacijaID}" th:text="${rez.datOd}"></td>
+										<td th:id="'do-'+${rez.rezervacijaID}" th:text="${rez.datDo}"></td>
+										<td style="display: none;"
+											th:id="'dodusl-'+${rez.rezervacijaID}"
+											th:text="${rez.dodUsluge}"></td>
+										<td th:if="${not #lists.isEmpty(rez.dodUslugeOpis)}">
+											<div th:each="du : ${rez.dodUslugeOpis}">
+												<p th:utext="${du} + '&lt;br /&gt;' "></p>
+											</div>
+										</td>
+										<td th:if="${#lists.isEmpty(rez.dodUslugeOpis)}">
+											<p>Nisu zatražene</p>
+										</td>
+										<td sec:authorize="hasAuthority('ADMIN')"
+											style="align: center;">
+
+											<div class="text-center">
+
+												<button sec:authorize="hasAuthority('ADMIN')"
+													th:id="${rez.rezervacijaID}" type="button"
+													class="urediKlasa btn btn-secondary" data-toggle="modal"
+													data-target="#urediModal">Uredi</button>
+												<form sec:authorize="hasAuthority('ADMIN')"
+													onsubmit="return preSubmit()" action="#"
+													th:action="@{'/pregledRezervacija/ponisti/' + ${rez.rezervacijaID} +'/' + ${rez.korisnik.idKorisnika} +'/' + 1}"
+													method="post">
+													<button style="margin-top: 5px;" type="submit"
+														class="ponistiKlasa btn btn-danger">Poništi</button>
+												</form>
+											</div>
+										</td>
+
+									</tr>
+								</tbody>
+							</table>
+							<p th:if="${#lists.isEmpty(rezervacijeTrueList)}">Nema
+								potvđenih rezervacija</p>
+						</div>
+					</div>
+
+					<div th:classappend="${odbShowClass}" class="tab-pane fade" id="nav-link3"
+						role="tabpanel" aria-labelledby="nav-link3-tab">
+
+						<div style="padding: 30px;"
+							class="table-responsive row justify-content-center">
+							<table id="falseTable" class="table"
+								th:if="${not #lists.isEmpty(rezervacijeOdbijeneList)}">
+								<thead>
+									<tr>
+										<th></th>
+										<th>Korisnik</th>
+										<th style="display: none;"></th>
+										<th>Smještajna jedinica</th>
+										<th>Broj odraslih</th>
+										<th>Broj djece 0-1</th>
+										<th>Broj djece 2-7</th>
+										<th>Broj djece 8-14</th>
+										<th>Datum od</th>
+										<th>Datum do</th>
+										<th style="display: none;"></th>
+										<th>Dodatne usluge</th>
+									</tr>
+								</thead>
+
+								<tbody>
+									<tr th:each="rez : ${rezervacijeOdbijeneList}">
+										<td th:text="${rez.datRez}"></td>
+										<td
+											th:utext="${rez.korisnik.ime} + ' ' + ${rez.korisnik.prezime} + '&lt;br /&gt;' + ${rez.korisnik.email} + '&lt;br /&gt;' + ${rez.korisnik.brTelefona} + 
+				            		'&lt;br /&gt;' + ${rez.korisnik.ulicaKbr} + ', ' + ${rez.korisnik.grad}  + ', ' + ${rez.korisnik.drzava} "></td>
+										<td style="display: none;" th:id="'tp-'+${rez.rezervacijaID}"
+											th:text="${rez.smjJed.tipSmjestJed.idTipSmjestJed}">
+										<td
+											th:text="${rez.smjJed.tipSmjestJed.tipSmjestJed} + ' ' + ${rez.smjJed.nazSmjestJed}"></td>
+										<td th:id="'odr-'+${rez.rezervacijaID}"
+											th:text="${rez.brOdraslih}"></td>
+										<td th:id="'01-'+${rez.rezervacijaID}"
+											th:text="${rez.brDjece0_1}"></td>
+										<td th:id="'27-'+${rez.rezervacijaID}"
+											th:text="${rez.brDjece2_7}"></td>
+										<td th:id="'814-'+${rez.rezervacijaID}"
+											th:text="${rez.brDjece8_14}"></td>
+										<td th:id="'od-'+${rez.rezervacijaID}" th:text="${rez.datOd}"></td>
+										<td th:id="'do-'+${rez.rezervacijaID}" th:text="${rez.datDo}"></td>
+										<td style="display: none;"
+											th:id="'dodusl-'+${rez.rezervacijaID}"
+											th:text="${rez.dodUsluge}"></td>
+										<td th:if="${not #lists.isEmpty(rez.dodUslugeOpis)}">
+											<div th:each="du : ${rez.dodUslugeOpis}">
+												<p th:utext="${du} + '&lt;br /&gt;' "></p>
+											</div>
+										</td>
+										<td th:if="${#lists.isEmpty(rez.dodUslugeOpis)}">
+											<p>Nisu zatražene</p>
+										</td>
+
+									</tr>
+								</tbody>
+							</table>
+							<p th:if="${#lists.isEmpty(rezervacijeOdbijeneList)}">Nema
+								poništenih rezervacija</p>
+						</div>
+					</div>
+				</div>
+				</main>
+			</div>
+		</div>
+
+		<div align="center">
+			<div class="modal fade" id="urediModal">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<form onsubmit="return prePromjeni()"
+							th:action="@{/pregledRezervacija/uredi}" method="post"
+							th:object="${promjenaRezervacije}">
+
+							<div class="modal-header">
+								<div style="margin: 0 auto;">
+									<h5 class="modal-title">Za promjenu parametara
+										rezervacije, ispunite samo ona polja koja želite promijeniti!</h5>
+								</div>
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+							</div>
+
+							<div class="modal-body">
+								<div class="container">
+									<div class="row">
+										<div class="col-md-12">
+											<div class="well well-sm">
+												<div id="rowNow" class="row">
+
+													<input th:id="rezInputId" style="display: none;"
+														th:name="rezervacijaId" th:value="*{rezervacijaId}">
+														
+													<input th:id="trenActive" style="display: none;"
+														th:name="trenActive" th:value="*{trenActive}">
+														
+													<input th:id="korisnikInputId" style="display: none;"
+														th:name="korisnikID" th:value="*{korisnikID}">
+
+													<div class="col-md-12">
+														<div class="form-group">
+															<select class="form-control" id="tip"
+																th:field="*{tipSmjestJedId}">
+																<option th:value="1" selected="selected">Tip
+																	smještajne jedinice</option>
+																<option th:each="tip : ${tipSmjestJedList}"
+																	th:value="${tip.idTipSmjestJed}"
+																	th:text="${tip.tipSmjestJed} +', '+ ${tip.pogled} +', '+ ${tip.kapacitetOd} + '-' + ${tip.kapacitetDo}">Tip,pogled,kapacitet</option>
+															</select>
+														</div>
+													</div>
+
+													<div class="col-md-6">
+														<div class="form-group">
+															<label for="subject"> Datum od </label> <input
+																autocomplete="off" th:value="*{datumOd}" name="datumOd"
+																onkeydown="return false;" style="cursor: pointer;" onfocus="blur()"
+																class="kalOd kalendar form-control" id="datepickerOd">
+														</div>
+													</div>
+
+													<div class="col-md-6">
+														<div class="form-group">
+															<label for="subject"> Datum do </label> <input
+																autocomplete="off" th:value="*{datumDo}" name="datumDo"
+																onkeydown="return false;" style="cursor: pointer;" onfocus="blur()"
+																class="kalDo kalendar form-control" id="datepickerDo">
+														</div>
+													</div>
+
+													<div class="col-md-6">
+														<div class="form-group">
+															<label for="subject"> Broj odraslih </label> <input
+																th:value="*{brOdraslih}" name="brOdraslih"
+																id="brOdraslih" class="form-control" type="number"
+																min="0" onkeyup="fixKapacitet(this)"
+																onkeypress="fixNumber(event)">
+														</div>
+													</div>
+
+													<div class="col-md-6">
+														<div class="form-group">
+															<label for="subject"> Broj djece 0-1 godina </label> <input
+																th:value="*{brDj01}" name="brDj01" id="brDj01"
+																class="form-control" type="number" min="0"
+																onkeyup="fixKapacitet(this)"
+																onkeypress="fixNumber(event)">
+														</div>
+													</div>
+
+													<div class="col-md-6">
+														<div class="form-group">
+															<label for="subject"> Broj djece 2-7 godina </label> <input
+																th:value="*{brDj27}" name="brDj27" id="brDj27"
+																class="form-control" type="number" min="0"
+																onkeyup="fixKapacitet(this)"
+																onkeypress="fixNumber(event)">
+														</div>
+													</div>
+
+													<div class="col-md-6">
+														<div class="form-group">
+															<label for="subject"> Broj djece 8-14 godina </label> <input
+																th:value="*{brDj814}" name="brDj814" id="brDj814"
+																class="form-control" type="number" min="0"
+																onkeyup="fixKapacitet(this)"
+																onkeypress="fixNumber(event)">
+														</div>
+													</div>
+
+													<div class="col-md-6 card border-info mb-3"
+														style="max-width: 20rem;">
+														<div class="card-header">Odaberite dodatne usluge:</div>
+														<div class="card-body text-info">
+															<div class="col-md-6">
+																<div class="form-group">
+																	<div th:each="dodatnaUsluga : ${dodatneUslugeList}">
+																		<input class="mojCb form-control" type="checkbox"
+																			th:id="'d-'+${dodatnaUsluga.idUsluge}"
+																			th:value="${dodatnaUsluga.idUsluge}"
+																			th:field="*{dodUsluge}" /> <label
+																			th:for="${dodatnaUsluga.idUsluge}"
+																			th:text="${dodatnaUsluga.nazUsluge}"></label>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<div align="center" class="col-md-12">
+									<button class="btnPromjeni btn btn-primary pull-right"
+										id="btnPromijeni">Zatraži promjenu</button>
+									<br></br>
+									<div class="buttonText"></div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

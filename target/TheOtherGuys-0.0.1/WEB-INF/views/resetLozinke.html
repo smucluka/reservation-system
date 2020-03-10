@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/baseLayout}">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Reset lozinke</title>
+
+
+</head>
+<body>
+	<div layout:fragment="content">
+
+		<div class="container-fluid bg-secondary">
+			<div th:include="header :: header"></div>
+		</div>
+
+
+		<div class="container">
+			<form class="" action="#" th:action="@{/lozinka/reset}" th:object="${resetLozinkeForm}" method="post">
+				<br> <br> <br>
+				
+				<div class="row form-group justify-content-center">
+					<div class="col-6">
+						<i
+							style="display: inline-flex; vertical-align: middle; align-items: middle;"
+							class="material-icons">email</i> <label for="email">Email</label>
+						<input required type="email"
+								class="form-control" id="email" th:field="*{email}"
+								placeholder="Email">
+							<p class="text-danger" th:each="error : ${#fields.errors('email')}"
+          						th:text="${error}">Validation error</p>
+					</div>
+				</div>
+				<div class="row form-group justify-content-center">
+					<button type="submit" class="btn btn-primary">Resetiraj lozinku</button>
+				</div>
+			</form>
+		</div>
+
+		
+	</div>
+</body>
+</html>

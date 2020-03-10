@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" 
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<body>
+
+<div th:fragment="noviAdminModal">
+ 
+ 	<!-- Button trigger modal -->
+	<button type="button" class="dodajKlasa btn btn-primary" data-toggle="modal" data-target="#dodajAdminaModal">
+	  Dodaj administratora
+	</button>
+	
+	<!-- Modal -->
+	<div class="modal fade" id="dodajAdminaModal" tabindex="-1" role="dialog" aria-labelledby="noviAdminLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="noviAdminlLabel">Novi administrator</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	      	<form onsubmit="return preSubmitModal()" class="col" action="#" th:action="@{/dodaj/admin}" th:object="${noviAdmin}"  method="post">
+
+			<div class="row form-group">
+				<div class="col">
+					<label for="ime">Ime</label>
+			    	<input required type="text" class="form-control" id="ime" th:field="*{ime}" placeholder="Ime">
+				</div>
+				<div class="col">
+					<label for="prezime">Prezime</label>
+			    	<input required type="text" class="form-control" id="prezime" th:field="*{prezime}" placeholder="Prezime">
+				</div>
+		 	</div>
+		 	<div class="row form-group">
+		 		<div class="col">
+			    	<label for="drzava">Država</label>
+			    	<input required type="text" class="form-control" id="drzava" th:field="*{drzava}" placeholder="Država">
+		 		</div>
+		 		<div class="col">
+			 		<label for="grad">Grad</label>
+				    <input required type="text" class="form-control" id="grad" th:field="*{grad}" placeholder="Grad">
+		 		</div>
+		 	</div>
+		 	<div class="row form-group">
+		 		<div class="col">
+				    <label for="ulicaKbr">Ulica i kućni broj</label>
+				    <input required type="text" class="form-control" id="ulicaKbr" th:field="*{ulicaKbr}" placeholder="Ulica i kućni broj">
+		 		</div>
+				<div class="col">
+					<label for="brTelefona">Broj telefona</label>
+				    <input type="text" class="form-control" id="brTelefona" th:field="*{brTelefona}" placeholder="Broj telefona">
+				</div>
+		 	</div>
+		 	<div class="row form-group">
+		 		<div class="col">
+				    <label for="email">Email</label>
+				    <input required type="email" class="form-control" id="email" th:field="*{email}" placeholder="Email">
+		 		</div>
+		 	</div>
+		 	<div class="row form-group">
+		 		<div class="col">
+				    <label for="password">Lozinka</label>
+				    <input required type="password" class="form-control" id="password" th:field="*{password}" placeholder="Lozinka">
+		 		</div>
+		 	</div>
+		 	<div class="row form-group">
+		 		<div class="col">
+				    <label for="ponovljeniPassword">Ponovi lozinku</label>
+				    <input required type="password" class="form-control" id="ponovljeniPassword" th:field="*{ponovljeniPassword}" placeholder="Ponovi lozinku">
+		 		</div>
+		 	</div>
+		 	<button type="submit" class="dodajModal btn btn-primary">Dodaj administratora</button>
+		 	<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			<br></br>
+			<div id="modalTextId">
+			</div>
+			</form>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+   
+	
+</div> 
+
+</body>
+</html>

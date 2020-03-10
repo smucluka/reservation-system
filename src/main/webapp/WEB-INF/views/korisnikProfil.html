@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	layout:decorate="~{layouts/baseLayout}">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Moj profil</title>
+
+<script type="text/javascript">
+	function provjeri() {
+		var a = $('#sifra')["0"].value;
+		var b = $('#sifraDruga')["0"].value;
+		if (a != b) {
+			$('#textAppended').remove();
+			$('#appendTextId')
+					.append(
+							'<div id="textAppended" class="alert alert-warning"><strong>Upozorenje!</strong> Lozinke nisu jednake.</div>')
+			return false;
+		} else if (a.length > 0 && b.length > 0) {
+			$('#textAppended').remove();
+			$('#appendTextId')
+					.append(
+							'<div id="textAppended" class="alert alert-success"><strong>Promjena lozinke u tijeku.</strong> Molimo pričekajte...</div>')
+			return true;
+		}
+		return false;
+	}
+	function izbrisi() {
+		$('#textAppended').remove();
+		$('#sifra')["0"].value = "";
+		$('#sifraDruga')["0"].value = "";
+
+	}
+</script>
+</head>
+<body>
+	<div layout:fragment="content">
+
+
+		<div class="container-fluid bg-secondary">
+			<div th:include="header :: header"></div>
+		</div>
+		
+		<br /> <br />
+
+		<form class="col-9" method="post" th:object="${korisnik}">
+			<div class="form-group row justify-content-center">
+				<label for="ime" class="col-sm-2 col-form-label">Ime</label>
+				<div class="col-sm-7">
+					<input type="text" required class="form-control" name="ime" id="ime"
+						th:value="*{ime}">
+				</div>
+			</div>
+			<div class="form-group row justify-content-center">
+				<label for="prezime" class="col-sm-2 col-form-label">Prezime</label>
+				<div class="col-sm-7">
+					<input type="text" required class="form-control" name="prezime" id="prezime"
+						th:value="*{prezime}">
+				</div>
+			</div>
+			<div class="form-group row justify-content-center">
+				<label for="staticEmail" class="col-sm-2 col-form-label">Email</label>
+				<div class="col-sm-7">
+					<input type="text" disabled class="form-control" name="email"
+						id="staticEmail" th:value="*{email}">
+				</div>
+			</div>
+			<div class="form-group row justify-content-center">
+				<label for="drzava" class="col-sm-2 col-form-label">Država</label>
+				<div class="col-sm-7">
+					<input type="text" required class="form-control" name="drzava" id="drzava"
+						th:value="*{drzava}">
+				</div>
+			</div>
+			<div class="form-group row justify-content-center">
+				<label for="grad" class="col-sm-2 col-form-label">Grad</label>
+				<div class="col-sm-7">
+					<input type="text" required class="form-control" name="grad" id="grad"
+						th:value="*{grad}">
+				</div>
+			</div>
+			<div class="form-group row justify-content-center">
+				<label for="ulica" class="col-sm-2 col-form-label">Ulica</label>
+				<div class="col-sm-7">
+					<input type="text" required class="form-control" name="ulicaKbr" id="ulica"
+						th:value="*{ulicaKbr}">
+				</div>
+			</div>
+			<div class="form-group row justify-content-center">
+				<label for="brTelefona" class="col-sm-2 col-form-label">Broj
+					telefona</label>
+				<div class="col-sm-7">
+					<input type="text" required class="form-control" name="brTelefona"
+						id="brTelefona" th:value="*{brTelefona}">
+				</div>
+			</div>
+			<div class="row justify-content-center">
+				<button style="margin-right: 2px;" type="button"
+					class="btn btn-info" data-toggle="modal" onclick="izbrisi()"
+					data-target="#myModal">Promijeni lozinku</button>
+				<button style="margin-left: 2px;" class="btn btn-primary"
+					type="submit">Ažuriraj podatke</button>
+			</div>
+		</form>
+		<br></br> <br></br>
+
+		<div class="modal fade" id="myModal" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">Upišite novu lozinku</h4>
+					</div>
+					<form onsubmit="return provjeri()" method="post"
+						th:object="${securePassword}" th:action="@{/secure}">
+						<div class="col-md-12 modal-body">
+
+
+							<div>
+								<div class="form-group">
+									<label for="subject"> Nova lozinka </label> <input id="sifra"
+										type="password" required class="form-control" name="password">
+								</div>
+							</div>
+
+							<div>
+								<div class="form-group">
+									<label for="subject"> Ponovi lozinku </label> <input
+										id="sifraDruga" type="password" class="form-control"
+										name="lozinka" required th:value="*{lozinka}">
+								</div>
+							</div>
+
+						</div>
+
+						<div class="modal-footer">
+							<div id="appendTextId" align="center" class="col-md-12">
+								<button type="submit" class="btn btn-primary pull-right"
+									id="btnReserve">OK</button>
+								<button type="button" class="btn btn-info" data-dismiss="modal">Odustani</button>
+								<br></br>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+
+</html>

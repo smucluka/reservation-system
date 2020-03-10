@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	layout:decorate="~{layouts/baseLayout}">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Statistika</title>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#table1, #table2, #table3, #table4').DataTable({
+			responsive : true,
+			"language" : {
+				"sEmptyTable" : "Nema podataka u tablici",
+				"sInfo" : "Prikazano _START_ do _END_ od _TOTAL_ rezultata",
+				"sInfoEmpty" : "Prikazano 0 do 0 od 0 rezultata",
+				"sInfoFiltered" : "(filtrirano iz _MAX_ ukupnih rezultata)",
+				"sInfoPostFix" : "",
+				"sInfoThousands" : ",",
+				"sLengthMenu" : "Prikaži _MENU_ rezultata po stranici",
+				"sLoadingRecords" : "Dohvaćam...",
+				"sProcessing" : "Obrađujem...",
+				"sSearch" : "Pretraži:",
+				"sZeroRecords" : "Ništa nije pronađeno",
+				"oPaginate" : {
+					"sFirst" : "Prva",
+					"sPrevious" : "Nazad",
+					"sNext" : "Naprijed",
+					"sLast" : "Zadnja"
+				},
+				"oAria" : {
+					"sSortAscending" : ": aktiviraj za rastući poredak",
+					"sSortDescending" : ": aktiviraj za padajući poredak"
+				}
+			}
+		});
+
+	});
+</script>
+
+</head>
+<body>
+
+	<div layout:fragment="content">
+
+		<div class="container-fluid bg-secondary">
+			<div th:include="header :: header"></div>
+		</div>
+
+		<div class="container-fluid">
+			<div class="row">
+				<nav id="navId" style="margin-bottom: 20px"
+					class="col-sm-3 col-md-2 d-none d-sm-block bg-light sidebar"
+					th:include="sidebar :: sidebar"></nav>
+
+				<main id="contentId" role="main"
+					class="col-sm-9 ml-sm-auto col-md-10 pt-3"> <br></br>
+				<h3 class="text-center" style="margin-bottom: 25px;">Statistika</h3>
+
+				<nav>
+					<div class="justify-content-center nav nav-tabs" id="nav-tab"
+						role="tablist">
+
+						<a class="nav-item nav-link active" id="nav-link1-tab"
+							data-toggle="tab" href="#nav-link1" role="tab"
+							aria-controls="nav-link1" aria-selected="true">Smještajne
+							jedinice</a> <a class="nav-item nav-link" id="nav-link2-tab"
+							data-toggle="tab" href="#nav-link2" role="tab"
+							aria-controls="nav-link2" aria-selected="false">Države</a> <a
+							class="nav-item nav-link" id="nav-link3-tab" data-toggle="tab"
+							href="#nav-link3" role="tab" aria-controls="nav-link3"
+							aria-selected="false">Gradovi</a> <a class="nav-item nav-link"
+							id="nav-link4-tab" data-toggle="tab" href="#nav-link4" role="tab"
+							aria-controls="nav-link4" aria-selected="false">Dodatne
+							usluge</a>
+					</div>
+				</nav>
+				<div class="tab-content" id="nav-tabContent">
+
+					<div class="tab-pane fade show active" id="nav-link1"
+						role="tabpanel" aria-labelledby="nav-link1-tab">
+						<br></br>
+						<div class="row justify-content-center">
+							<div class="col-md-4">
+								<table id="table1" class="table"
+									th:if="${not #lists.isEmpty(rangSmjestJed)}">
+									<thead>
+										<tr>
+											<th>Smještajna jedinica</th>
+											<th>Broj rezervacija</th>
+											<th>Ukupno dana</th>
+										</tr>
+									</thead>
+
+									<tbody>
+										<tr th:each="smjestJed : ${rangSmjestJed}">
+											<td th:text="${smjestJed.name}"></td>
+											<td th:text="${smjestJed.value}"></td>
+											<td th:text="${smjestJed.value2}"></td>
+										</tr>
+									</tbody>
+
+								</table>
+								<p th:if="${#lists.isEmpty(rangSmjestJed)}">Nema potvrđenih
+									rezervacija!</p>
+							</div>
+						</div>
+					</div>
+
+					<div class="tab-pane fade" id="nav-link2" role="tabpanel"
+						aria-labelledby="nav-link2-tab">
+						<br></br>
+						<div class="row justify-content-center">
+							<div class="col-md-4">
+								<div class="table-responsive justify-content-center">
+									<table id="table2" class="table"
+										th:if="${not #lists.isEmpty(rangDrzava)}">
+										<thead>
+											<tr>
+												<th>Država</th>
+												<th>Broj rezervacija</th>
+											</tr>
+										</thead>
+
+										<tbody>
+											<tr th:each="drzava : ${rangDrzava}">
+												<td th:text="${drzava.name}"></td>
+												<td th:text="${drzava.value}"></td>
+											</tr>
+										</tbody>
+									</table>
+									<p th:if="${#lists.isEmpty(rangDrzava)}">Nema potvrđenih
+										rezervacija!</p>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="tab-pane fade" id="nav-link3" role="tabpanel"
+						aria-labelledby="nav-link3-tab">
+						<br></br>
+						<div class="row justify-content-center">
+							<div class="col-md-4">
+								<div class="table-responsive justify-content-center">
+									<table id="table3" class="table"
+										th:if="${not #lists.isEmpty(rangGrad)}">
+										<thead>
+											<tr>
+												<th>Grad</th>
+												<th>Broj rezervacija</th>
+											</tr>
+										</thead>
+
+										<tbody>
+											<tr th:each="grad : ${rangGrad}">
+												<td th:text="${grad.name}"></td>
+												<td th:text="${grad.value}"></td>
+											</tr>
+										</tbody>
+
+									</table>
+									<p th:if="${#lists.isEmpty(rangGrad)}">Nema potvrđenih
+										rezervacija!</p>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="tab-pane fade" id="nav-link4" role="tabpanel"
+						aria-labelledby="nav-link4-tab">
+						<br></br>
+						<div class="row justify-content-center">
+							<div class="col-md-4">
+								<div class="table-responsive justify-content-center">
+									<table id="table4" class="table"
+										th:if="${not #lists.isEmpty(rangUsluge)}">
+										<thead>
+											<tr>
+												<th>Dodatna usluga</th>
+												<th>Broj rezervacija</th>
+											</tr>
+										</thead>
+
+										<tbody>
+											<tr th:each="usl : ${rangUsluge}">
+												<td th:text="${usl.name}"></td>
+												<td th:text="${usl.value}"></td>
+											</tr>
+										</tbody>
+
+									</table>
+									<p th:if="${#lists.isEmpty(rangUsluge)}">Nema potvrđenih
+										rezervacija!</p>
+
+								</div>
+							</div>
+						</div>
+						<br>
+						<br>
+						<div class="row justify-content-center">
+							<div class="col-md-4">
+								<div class="table-responsive justify-content-center">
+									<table id="table4" class="table"
+										th:if="${not #lists.isEmpty(rangUslugeDrzava)}">
+										<thead>
+											<tr>
+												<th>Država</th>
+												<th>Dodatna usluga</th>
+												<th>Broj rezervacija </th>
+											</tr>
+										</thead>
+
+										<tbody>
+											<tr th:each="uslDrz : ${rangUslugeDrzava}">
+												<td th:text="${uslDrz.name}"></td>
+												<td th:text="${uslDrz.name2}"></td>
+												<td th:text="${uslDrz.value}"></td>
+											</tr>
+										</tbody>
+
+									</table>
+									<p th:if="${#lists.isEmpty(rangUslugeDrzava)}">Nema potvrđenih
+										rezervacija!</p>
+
+								</div>
+							</div>
+						</div>
+						<br>
+						<br>
+						<div class="row justify-content-center">
+							<div class="col-md-4">
+								<div class="table-responsive justify-content-center">
+									<table id="table4" class="table"
+										th:if="${not #lists.isEmpty(rangUslugeBrGostiju)}">
+										<thead>
+											<tr>
+												<th>Broj gostiju</th>
+												<th>Dodatna usluga</th>
+												<th>Broj rezervacija </th>
+											</tr>
+										</thead>
+
+										<tbody>
+											<tr th:each="uslGst : ${rangUslugeBrGostiju}">
+												<td th:text="${uslGst.value}"></td>
+												<td th:text="${uslGst.name}"></td>
+												<td th:text="${uslGst.value2}"></td>
+											</tr>
+										</tbody>
+
+									</table>
+									<p th:if="${#lists.isEmpty(rangUslugeBrGostiju)}">Nema potvrđenih
+										rezervacija!</p>
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				</main>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+

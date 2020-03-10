@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	layout:decorate="~{layouts/baseLayout}">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Trenutno prijavljeni korisnici</title>
+
+</head>
+<body>
+	<div layout:fragment="content">
+
+		<div class="container-fluid bg-secondary">
+			<div th:include="header :: header"></div>
+		</div>
+		<div class="container-fluid">
+			<div class="row">
+				<nav id="navId" class="col-sm-3 col-md-2 d-none d-sm-block bg-light sidebar"
+					th:include="sidebar :: sidebar"></nav>
+
+				<main id="contentId" role="main" class="col-sm-9 ml-sm-auto col-md-10 pt-3">
+				<br>
+				<br>
+				<h4 class="justify-content-center">
+					<span
+						th:text="'Prijavljeni administratori (' + ${#lists.size(adminList)} +')'"
+						th:remove="tag">title</span>
+				</h4>
+				<div class="row table-responsive justify-content-center">
+					<table class="table" th:if="${not #lists.isEmpty(adminList)}">
+						<thead>
+							<tr>
+								<th>Ime</th>
+								<th>Prezime</th>
+								<th>Email</th>
+							</tr>
+						</thead>
+
+						<tbody>
+							<tr th:each="korisnik : ${adminList}">
+								<td th:text="${korisnik.ime}"></td>
+								<td th:text="${korisnik.prezime}"></td>
+								<td th:text="${korisnik.email}"></td>
+							</tr>
+						</tbody>
+					</table>
+					<p class="text-center" th:if="${#lists.isEmpty(adminList)}">Trenutno
+						nema prijavljenih administratora.</p>
+				</div>
+				
+				<br>
+				<br>
+				<h4>
+					<span
+						th:text="'Prijavljeni korisnici (' + ${#lists.size(korisnikList)} +')'"
+						th:remove="tag">title</span>
+				</h4>
+				<div class="row table-responsive justify-content-center">
+					<table class="table" th:if="${not #lists.isEmpty(korisnikList)}">
+						<thead>
+							<tr>
+								<th>Ime</th>
+								<th>Prezime</th>
+								<th>Email</th>
+							</tr>
+						</thead>
+
+						<tbody>
+							<tr th:each="korisnik : ${korisnikList}">
+								<td th:text="${korisnik.ime}"></td>
+								<td th:text="${korisnik.prezime}"></td>
+								<td th:text="${korisnik.email}"></td>
+							</tr>
+						</tbody>
+					</table>
+					<p class="text-center" th:if="${#lists.isEmpty(korisnikList)}">Trenutno
+						nema prijavljenih korisnika.</p>
+				</div>
+				</main>
+			</div>
+		</div>
+
+
+
+	</div>
+</body>
+</html>

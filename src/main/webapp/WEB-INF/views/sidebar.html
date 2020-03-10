@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+
+
+<body>
+
+	<nav id="sidebarID" class="nav flex-column nav-justified" th:fragment="sidebar">
+		<script>
+			$(window).resize(function() {
+				  var width = $(window).width();
+				  if (width < 1000){
+				    $("#navId").removeClass("col-sm-3 col-md-2 d-none d-sm-block bg-light sidebar").addClass( "col-md-4 offset-md-4 bg-light sidebar" );
+				    $("#contentId").removeClass("col-sm-9 ml-sm-auto col-md-10 pt-3").addClass( "col-sm-12" );
+				  } else{
+					  $("#navId").removeClass("col-md-4 offset-md-4 bg-light sidebar").addClass( "col-sm-3 col-md-2 d-none d-sm-block bg-light sidebar" );
+					  $("#contentId").removeClass("col-sm-12").addClass( "col-sm-9 ml-sm-auto col-md-10 pt-3" );;
+				  }
+				  
+				});
+			$( document ).ready(function() {
+				var width = $(window).width();
+				  if (width < 1000){
+				    $("#navId").removeClass("col-sm-3 col-md-2 d-none d-sm-block bg-light sidebar").addClass( "col-md-4 offset-md-4 bg-light sidebar" );
+				    $("#contentId").removeClass("col-sm-9 ml-sm-auto col-md-10 pt-3").addClass( "col-sm-12" );
+				  } else{
+					  $("#navId").removeClass("col-md-4 offset-md-4 bg-light sidebar").addClass( "col-sm-3 col-md-2 d-none d-sm-block bg-light sidebar" );
+					  $("#contentId").removeClass("col-sm-12").addClass( "col-sm-9 ml-sm-auto col-md-10 pt-3" );;
+				  }
+			});
+		</script>
+		<div class="container-fluid">
+			<ul style="margin-top: 10px;" class="nav nav-pills flex-column">
+
+				<li sec:authorize="hasAuthority('VLASNIK')" class="nav-item"><a
+					class="nav-link" th:classappend="${classActiveAdmin}"
+					th:href="@{/dodaj/admin}">Administratori</a></li>
+
+				<li sec:authorize="hasAuthority('VLASNIK')" class="nav-item"><a
+					class="nav-link" th:classappend="${classActiveSmjest}"
+					th:href="@{/smjestaj}">Upravljanje smještajem</a></li>
+
+				<li sec:authorize="hasAuthority('VLASNIK')" class="nav-item"><a
+					class="nav-link" th:classappend="${classActiveStatistika}"
+					th:href="@{/statistika}">Statistika</a></li>
+
+				<li class="nav-item"><a class="nav-link"
+					th:classappend="${classActiveRezervacije}"
+					th:href="@{/pregledRezervacija}">Rezervacije</a></li>
+
+				<li class="nav-item"><a class="nav-link"
+					th:classappend="${classActivePrijavljeniKorisnici}"
+					th:href="@{/prijavljeniKorisnici}">Trenutno prijavljeni
+						korisnici</a></li>
+			</ul>
+		</div>
+	</nav>
+
+</body>
+</html>

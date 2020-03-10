@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+						http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+				
+		<!-- Skupno sve postavke -->
+		<property name="host" value="smtp.gmail.com" />
+		<property name="port" value="587" />
+		<property name="protocol" value="smtp" />
+		<property name="username" value="noreply.theotherguys@gmail.com" />
+		<property name="password" value="qwertz12" />
+		<property name="defaultEncoding" value="UTF-8" />
+
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.starttls.enable">true</prop>
+				<prop key="mail.smtp.debug">true</prop>
+			</props>
+		</property>
+		
+	</bean>
+
+<!-- 	<bean id="templateMessage" class="org.springframework.mail.SimpleMailMessage"> -->
+<!-- 		<property name="from" value="no-reply.prus@fina.hr" /> -->
+		
+		<!-- Skupno sve postavke
+			<property name="from" value="" />
+			<property name="replyTo" value="" />
+			<property name="to" value="" />
+			<property name="cc" value="" />
+			<property name="bcc" value="" />
+			<property name="sentDate" value="" />
+			<property name="subject" value="" />
+			<property name="text" value="" />
+		 -->
+		
+<!-- 	</bean> -->
+
+</beans>

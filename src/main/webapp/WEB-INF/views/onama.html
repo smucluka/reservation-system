@@ -1,0 +1,169 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	layout:decorate="~{layouts/baseLayout}">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<title>O nama</title>
+
+
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+	rel="stylesheet">
+<style>
+.bg-company-gray {
+	background-color: lightslategray;
+}
+</style>
+<script>
+	var lastPicNumber = 0;
+	$(document)
+			.ready(
+					function() {
+						$(".pictureButton")
+								.click(
+										function() {
+											for (i = 0; i < lastPicNumber; i++) {
+												$('#ol-' + i).remove();
+												$('#imgs-' + i).remove();
+											}
+											lastPicNumber=0;
+										
+											var picId = $(this).attr('id');
+											
+											var pictureList = $('#' + picId
+													+ '-list')["0"].value;
+											var result = pictureList.substring(
+													1, pictureList.length - 1);
+	
+											var slike = result.split(",");
+
+											for (i = 0; i < slike.length; i++) {
+												slike[i] = slike[i].trim();
+											}
+
+											for (i = 0; i < slike.length; i++) {
+												lastPicNumber++;
+												var prefix = 'resources/images/';
+												slike[i] = slike[i].trim();
+												var trenSlika = prefix
+														.concat(slike[i]);
+
+												if (i == 0) {
+													$('#olSet')
+															.append(
+																	'<li id="ol-'+i+'" data-target="#slideshow" data-slide-to="'+ i + '" class="active"></li>')
+													$('#imgSet')
+															.append(
+																	'<div id="imgs-'+i+'" class="carousel-item active"><img src="'+ trenSlika + '" class="img-fluid" width="1600" height="800"></div>')
+												} else {
+													$('#olSet')
+															.append(
+																	'<li id="ol-'+i+'" data-target="#slideshow" data-slide-to="' + i + '"></li>')
+													$('#imgSet')
+															.append(
+																	'<div id="imgs-'+i+'" class="carousel-item"><img src="'+ trenSlika + '" class="img-fluid" width="1600" height="800"></div>')
+												}
+											}
+										});
+					});
+</script>
+</head>
+<body>
+
+	<div layout:fragment="content">
+
+		<div class="container-fluid bg-secondary">
+			<div th:include="header :: header"></div>
+		</div>
+
+		<div class="container bg-white">
+			<br> <br>
+
+		</div>
+
+		<div align="center">
+			<h4>
+				Informacije o apartmanima i sobama hotelskog naselja <i>Kod nas
+					je najljepše</i>
+			</h4>
+		</div>
+
+		<div class="table-responsive" style="padding: 50px" align="center">
+			<table id="mojaTablica" class="table  table-bordered table-striped"
+				th:if="${not #lists.isEmpty(tipSmjestJedList)}">
+				<thead>
+					<tr>
+						<th class="text-center">Tip smještajne jedinice</th>
+						<th class="text-center">Pogled</th>
+						<th class="text-center">Kapacitet</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="tipSmjJed : ${tipSmjestJedList}">
+
+						<td class="text-center" th:text="${tipSmjJed.tipSmjestJed}"
+							th:id="'tip-' + ${tipSmjJed.idTipSmjestJed}"></td>
+						<td class="text-center" th:text="${tipSmjJed.pogled}"
+							th:id="'pregled-' + ${tipSmjJed.idTipSmjestJed}"></td>
+						<td class="text-center"
+							th:text="${tipSmjJed.kapacitetOd} + '-' + ${tipSmjJed.kapacitetDo}"
+							th:id="'kap-' + ${tipSmjJed.idTipSmjestJed}"></td>
+						<td th:id="'img-' + ${tipSmjJed.idTipSmjestJed}">
+							<div class="text-center">
+								<a th:id="'tipId-' + ${tipSmjJed.idTipSmjestJed}"
+									href="#picModal" role="button" data-toggle="modal"
+									class="pictureButton"> <img
+									style="height: 175px; width: 250px;" class="rounded"
+									th:src="'resources/images/'+ ${tipSmjJed.slika[0]}">
+								</a> <input type="text"
+									th:id="'tipId-' +  ${tipSmjJed.idTipSmjestJed} + '-list'"
+									style="display: none;" th:value="${tipSmjJed.slika}"></input>
+							</div>
+						</td>
+
+					</tr>
+				</tbody>
+			</table>
+			<div th:switch="${provjera}">
+				<p class="text-danger" th:case="'0'"
+					th:if="${#lists.isEmpty(tipSmjestJedList)}">Trenutno nisu dodani tipovi
+					smještajnih jedinica. Uskoro će biti dodani...</p>
+			</div>
+		</div>
+
+		<div id="picModal" class="modal fade bs-example-modal-lg"
+			tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+			aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+
+					<div id="slideshow" class="carousel slide" data-ride="carousel"
+						align="center">
+
+						<!-- Indicators -->
+						<ul id="olSet" class="carousel-indicators">
+						</ul>
+
+						<!-- The slideshow -->
+						<div id="imgSet" class="carousel-inner"></div>
+
+						<!-- Left and right controls -->
+						<a class="carousel-control-prev" href="#slideshow"
+							data-slide="prev"> <span class="carousel-control-prev-icon"></span>
+						</a> <a class="carousel-control-next" href="#slideshow"
+							data-slide="next"> <span class="carousel-control-next-icon"></span>
+						</a>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+</body>
+</html>

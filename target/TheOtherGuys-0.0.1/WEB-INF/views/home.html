@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	layout:decorate="~{layouts/baseLayout}">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<title>Početna stranica</title>
+
+<style>
+.carousel-control-prev, .carousel-control-next {
+	width: 25%;
+}
+</style>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+	rel="stylesheet">
+<style>
+.bg-company-gray {
+	background-color: lightslategray;
+}
+</style>
+
+
+</head>
+<body>
+
+	<div layout:fragment="content">
+
+		<div class="container-fluid bg-secondary">
+			<div th:include="header :: header"></div>
+		</div>
+
+		<br /> <br />
+
+		<h4 class="text-center">Dobrodošli,</h4> 
+		<h4 class="text-center"><i>Kod nas je najljepše</i>.</h4>
+
+		<div id="slideshow" class="carousel slide" data-ride="carousel"
+			align="center">
+
+			<!-- Indicators -->
+			<ul class="carousel-indicators">
+				<li data-target="#slideshow" data-slide-to="0" class="active"></li>
+				<li data-target="#slideshow" data-slide-to="1"></li>
+				<!-- <li data-target="#slideshow" data-slide-to="2"></li> -->
+			</ul>
+
+			<!-- The slideshow -->
+			<div class="carousel-inner">
+				<div class="carousel-item active">
+
+					<!-- src="http://siamservicegroup.com/wp-content/uploads/2014/05/B22_021_resize.jpg"-->
+					<img
+						src="https://www.luxresorts.com/media/2601581/Maldives_Hotels_Resorts_LUX_Maldives_Rooms.jpg"
+						alt="First" class="img-fluid" width="1600" height="800">
+					<div class="carousel-caption">
+						<br> <a class="btn btn-info btn-responsive"
+							href="/pregled" th:href="@{/pregled}" role="button">Pregledaj
+							sobe i apartmane</a> <br> <br>
+					</div>
+				</div>
+				<!--  <div class="carousel-item">
+				<img
+					src="https://www.petasos.gr/wp-content/uploads/2014/07/Private-Pool-Suites-image.jpg"
+					alt="Second" class="rounded" width="1600" height="800">
+				<div class="carousel-caption">
+					<h3>Naslov 2</h3>
+					<br> <a class="btn btn-lg btn-primary" href="/pregled"
+						th:href="@{/pregled}" role="button">Pregledaj sobe i apartmane</a>
+					<br> <br>
+				</div>
+			</div>-->
+				<div class="carousel-item">
+					<img
+						src="http://www.hotelroomsearch.net/im/hotels/az/hotel-service.jpg"
+						alt="Third" class="img-fluid" width="1600" height="800">
+					<div class="carousel-caption">
+						<br> <a sec:authorize="!hasAuthority('ADMIN')" class="btn btn-info btn-responsive"
+							href="/pregled" th:href="@{/kontakt}" role="button">Kontaktirajte
+							nas</a> <br> <br>
+					</div>
+				</div>
+			</div>
+
+			<!-- Left and right controls -->
+			<a class="carousel-control-prev" href="#slideshow" data-slide="prev">
+				<span class="carousel-control-prev-icon"></span>
+			</a> <a class="carousel-control-next" href="#slideshow" data-slide="next">
+				<span class="carousel-control-next-icon"></span>
+			</a>
+		</div>
+
+		<br /> <br />
+		
+	</div>
+</body>
+</html>

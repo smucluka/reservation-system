@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/baseLayout}">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Registracija</title>
+
+<script type="text/javascript">
+	function provjeri() {
+		var a = $('#password')["0"].value;
+		var b = $('#ponovljeniPassword')["0"].value;
+		if (a != b) {
+			$('#textAppended').remove();
+			$('.textAppendedError').remove();
+			$('#appendTextId')
+					.append(
+							'<div id="textAppended" class="alert alert-danger"><strong>Upozorenje!</strong> Lozinke nisu jednake.</div>')
+			return false;
+		} else if (a.length > 0 && b.length > 0) {
+			$('#textAppended').remove();
+			$(".myDearReg").attr("disabled", true);
+			$('.textAppendedError').remove();
+			$('#appendTextId')
+					.append(
+							'<div id="textAppended" class="alert alert-success"><strong>Registracija u tijeku.</strong> Molimo pričekajte...</div>')
+			return true;
+		}
+		return false;
+	}
+</script>
+
+</head>
+<body>
+	<div layout:fragment="content">
+
+		<div class="container-fluid bg-secondary">
+			<div th:include="header :: header"></div>
+		</div>
+		<br> <br>
+
+		<div class="container">
+			<div class="row">
+				<form onsubmit="return provjeri()" class="col" action="#"
+					th:action="@{/registracija}" th:object="${registracijaForm}"
+					method="post">
+
+					<div class="row form-group">
+						<div class="col">
+							<label for="ime">Ime</label> <input required type="text"
+								class="form-control" id="ime" th:field="*{ime}"
+								placeholder="Ime">
+						</div>
+						<div class="col">
+							<label for="prezime">Prezime</label> <input required type="text"
+								class="form-control" id="prezime" th:field="*{prezime}"
+								placeholder="Prezime">
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col">
+							<label for="drzava">Država</label> <input required type="text"
+								class="form-control" id="drzava" th:field="*{drzava}"
+								placeholder="Država">
+						</div>
+						<div class="col">
+							<label for="grad">Grad</label> <input required type="text"
+								class="form-control" id="grad" th:field="*{grad}"
+								placeholder="Grad">
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col">
+							<label for="ulicaKbr">Ulica i kućni broj</label> <input required
+								type="text" class="form-control" id="ulicaKbr"
+								th:field="*{ulicaKbr}" placeholder="Ulica i kućni broj">
+						</div>
+						<div class="col">
+							<label for="brTelefona">Broj telefona</label> <input type="text"
+								class="form-control" id="brTelefona" th:field="*{brTelefona}"
+								placeholder="Broj telefona">
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col">
+							<label for="email">Email</label> <input required type="email"
+								class="form-control" id="email" th:field="*{email}"
+								placeholder="Email">
+							<p th:each="error : ${#fields.errors('email')}"
+          						th:text="${error}">Validation error</p>
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col">
+							<label for="password">Lozinka</label> <input required
+								type="password" class="form-control" id="password"
+								th:field="*{password}" placeholder="Lozinka">
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col">
+							<label for="ponovljeniPassword">Ponovi lozinku</label> <input
+								required type="password" class="form-control"
+								id="ponovljeniPassword" th:field="*{ponovljeniPassword}"
+								placeholder="Ponovi lozinku">
+						</div>
+					</div>
+					<div id="appendTextId">
+						<button type="submit" class="myDearReg btn btn-primary">Registriraj
+							se</button>
+						<br></br>
+
+						<div th:switch="${provjera}">
+							<div th:case="'1'" class="textAppendedError alert alert-danger">
+								<strong>Upisani e-Mail je već registriran.</strong>
+							</div>
+						</div>
+						<div th:switch="${provjera2}">
+							<div th:case="'1'" class="textAppendedError alert alert-danger">
+								<strong>Popunite obavezna polja bez razmaka.</strong>
+							</div>
+						</div>
+						
+					</div>
+
+				</form>
+			</div>
+		</div>
+
+	</div>
+</body>
+</html>

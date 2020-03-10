@@ -1,0 +1,96 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+</head>
+<body>
+	<div th:fragment="header">
+
+		<nav style="background-color: #010f26"
+			class="navbar navbar-expand-lg navbar-dark bg-secondary">
+			<a class="navbar-brand" th:href="@{/pocetna}"><img alt="a"
+				width="170" height="30" th:src="@{/resources/images/kodnasjenaj.png}"></a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse"
+				data-target="#navbarSupportedContent"
+				aria-controls="navbarSupportedContent" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto justify-content-begin w-100">
+					<li class="nav-item" th:classappend="${classActivePocetna}"><a
+						class="nav-link" th:href="@{/pocetna}"> <i
+							style="display: inline-flex; vertical-align: bottom; align-items: bottom;"
+							class="material-icons">home</i>&nbsp;Početna
+					</a></li>
+					<li class="nav-item" th:classappend="${classActivePregled}"><a
+						class="nav-link" th:href="@{/pregled}"><i
+							style="display: inline-flex; vertical-align: bottom; align-items: bottom;"
+							class="material-icons">hotel</i>&nbsp;Pregled</a></li>
+					<li sec:authorize="!hasAuthority('ADMIN')" class="nav-item" th:classappend="${classActiveKontakt}"><a
+						class="nav-link" th:href="@{/kontakt}"><i
+							style="display: inline-flex; vertical-align: bottom; align-items: bottom;"
+							class="material-icons">contact_mail</i>&nbsp;Kontakt</a></li>
+					<li class="nav-item" th:classappend="${classActiveOnama}"><a
+						class="nav-link" th:href="@{/onama}"><i
+							style="display: inline-flex; vertical-align: bottom; align-items: bottom;"
+							class="material-icons">info_outline</i>&nbsp;O nama</a></li>
+
+
+				</ul>
+
+				<ul class="navbar-nav mr-auto justify-content-end w-100">
+
+
+
+					<li sec:authorize="isAnonymous()"><a
+						class="btn btn-outline-light" th:href="@{/registracija}">Registracija</a>
+						<a class="btn btn-outline-light" th:href="@{/login}">Prijava</a></li>
+					<li sec:authorize="hasAuthority('ADMIN')" class="nav-item"
+						th:classappend="${classActiveAdminSucelje}"><a
+						class="nav-link" th:href="@{/pregledRezervacija}"> <i
+							style="display: inline-flex; vertical-align: bottom; align-items: bottom;"
+							class="material-icons">web</i>&nbsp;Upravljačka ploča
+					</a></li>
+
+					<li sec:authorize="hasAuthority('VLASNIK')" class="nav-item"
+						th:classappend="${classActiveVlasnikSucelje}"><a
+						class="nav-link" th:href="@{/dodaj/admin}"> <i
+							style="display: inline-flex; vertical-align: bottom; align-items: bottom;"
+							class="material-icons">web</i>&nbsp;Upravljačka ploča
+					</a></li>
+
+
+					<li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+						<a class="nav-link dropdown-toggle text-light" href="#"
+						id="navbarDropdown" role="button" data-toggle="dropdown"
+						aria-haspopup="true" aria-expanded="false"><i
+							style="display: inline-flex; vertical-align: bottom; align-items: bottom;"
+							class="material-icons">account_circle</i> <th:text
+								sec:authentication="principal.firstName" /> <th:text
+								sec:authentication="principal.lastName" /> </a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+							<a class="dropdown-item" th:href="@{/korisnik/profil}"
+								th:classappend="${classActiveMojProfil}">Moj profil</a> <a
+								class="dropdown-item" sec:authorize="hasAuthority('KORISNIK')"
+								th:href="@{/korisnik/rezervacije}"
+								th:classappend="${classActiveMojeRezervacije}">Moje
+								rezervacije</a>
+							<div class="dropdown-divider"></div>
+							<a class="dropdown-item" th:href="@{/logout}">Odjava</a>
+						</div>
+					</li>
+
+				</ul>
+
+
+			</div>
+		</nav>
+
+
+	</div>
+
+</body>
+</html>

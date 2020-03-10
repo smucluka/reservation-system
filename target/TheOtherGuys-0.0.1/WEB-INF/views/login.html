@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/baseLayout}">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Prijava</title>
+
+
+</head>
+<body>
+	<div layout:fragment="content">
+
+		<div class="container-fluid bg-secondary">
+			<div th:include="header :: header"></div>
+		</div>
+
+
+		<div class="container">
+			<form class="" action="login" method="post">
+				<br> <br> <br>
+				<div th:switch="${aktiviraj}">
+					<div th:case="'1'" class="text-center alert alert-success">
+						<strong>Uspješna registracija! Potvrdite e-Mail kako biste se prijavili.</strong>
+					</div>
+				</div>
+				
+				<div th:if="${message != null}" class="text-center alert alert-success">
+					<strong th:text="${message}"></strong>
+				</div>
+
+				<div class="row form-group justify-content-center">
+					<div class="col-6">
+						<i
+							style="display: inline-flex; vertical-align: middle; align-items: middle;"
+							class="material-icons">email</i> <label for="email">Email</label>
+						<input type="text" class="form-control" id="email" name="username"
+							placeholder="Email">
+					</div>
+				</div>
+				<div class="row form-group justify-content-center">
+					<div class="col-6">
+						<i
+							style="display: inline-flex; vertical-align: middle; align-items: middle;"
+							class="material-icons">vpn_key</i> <label for="password">Lozinka</label>
+						<input type="password" class="form-control" id="password"
+							name="password" placeholder="Lozinka">
+					</div>
+				</div>
+				<!--     		 	<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/> -->
+				<div class="row form-group justify-content-center">
+					<button type="submit" class="btn btn-primary">Prijavi se</button>
+				</div>
+			</form>
+		</div>
+
+		<div th:switch="${provjera}">
+			<div th:case="'1'" id="textAppended"
+				class="text-center offset-md-4 col-md-4 alert alert-danger">
+				<strong>Lozinka ili email netočni.</strong>
+			</div>
+		</div>
+
+		<div class="text-center">
+			<h6>
+				<a th:href="@{/lozinka/reset}">Zaboravili ste lozinku?</a>
+			</h6>
+			<h6>
+				Nemaš račun? <a th:href="@{/registracija}">Registriraj se</a>
+			</h6>
+		</div>
+	</div>
+</body>
+</html>

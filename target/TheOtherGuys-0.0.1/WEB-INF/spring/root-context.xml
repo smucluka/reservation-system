@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context.xsd">
+	<!-- Root Context: defines shared resources visible to all other web components -->
+<!-- 	<context:property-placeholder location="classpath:app.properties" /> -->
+<!-- 	<context:component-scan base-package="hr.fer.opp.projekt"> -->
+<!-- 		<context:exclude-filter expression="org.springframework.stereotype.Controller" type="annotation" /> -->
+<!-- 	</context:component-scan> -->
+	
+<!-- 	<import resource="/database-context.xml" /> -->
+<!-- 	<import resource="/messages-context.xml" /> -->
+<!--  	<import resource="/scheduler-context.xml" />  -->
+<!-- 	<import resource="/security-context.xml" />  -->
+<!-- 	<import resource="/email-context.xml" /> -->
+</beans>

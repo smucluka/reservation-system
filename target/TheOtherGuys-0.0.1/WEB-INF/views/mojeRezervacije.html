@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	layout:decorate="~{layouts/baseLayout}">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Moje rezervacije</title>
+
+
+</head>
+<body>
+	<div layout:fragment="content">
+
+		<div class="container-fluid bg-secondary">
+			<div th:include="header :: header"></div>
+		</div>
+
+		<div class="container-fluid">
+			<div class="row">
+
+				<main role="main" class="col align-self-center"> <br>
+				<br>
+				<h4 class="text-center">Moje rezervacije</h4>
+				<div style="padding: 50px" align="center"
+					class="row table-responsive justify-content-center">
+					<table class="table"
+						th:if="${not #lists.isEmpty(mojeRezervacijeList)}">
+						<thead >
+							<tr class="table-primary">
+								<th></th>
+								<th>Smještajna jedinica</th>
+								<th>Broj odraslih</th>
+								<th>Broj djece 0-1</th>
+								<th>Broj djece 2-7</th>
+								<th>Broj djece 8-14</th>
+								<th>Datum od</th>
+								<th>Datum do</th>
+								<th>Status</th>
+							</tr>
+						</thead>
+
+						<tbody>
+							<tr th:each="rez : ${mojeRezervacijeList}">
+								<td th:text="${rez.datRez}"></td>
+								<td
+									th:utext="${rez.smjJed.tipSmjestJed.tipSmjestJed} + ' ' + ${rez.smjJed.nazSmjestJed}"></td>
+								<td th:text="${rez.brOdraslih}"></td>
+								<td th:text="${rez.brDjece0_1}"></td>
+								<td th:text="${rez.brDjece2_7}"></td>
+								<td th:text="${rez.brDjece8_14}"></td>
+								<td th:text="${rez.datOd}"></td>
+								<td th:text="${rez.datDo}"></td>
+								<td>
+									<div th:switch="${rez.status}">
+										<p class="text-warning" th:case="'0'"> <i title="Rezervacija čeka na potvrdu" class="material-icons">watch_later</i></p>
+										<p class="text-success" th:case="'1'"><i title="Potvrđena rezervacija" class="material-icons">check</i></p>
+										<p class="text-danger" th:case="'2'"><i title="Poništena/odbijena rezervacija" class="material-icons">clear</i></p>
+										<p class="text-secondary" th:case="'3'"><i title="Isteklo" class="material-icons">watch_later</i></p>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<p class="text-center"
+						th:if="${#lists.isEmpty(mojeRezervacijeList)}">Niste obavili
+						niti jednu rezervaciju.</p>
+				</div>
+
+
+				<div class="text-center">
+					<h6>
+						Ukoliko ste pogriješili prilikom rezervacije ili želite poništiti
+						rezervaciju <a th:href="@{/kontakt}">kontaktirajte nas.</a>
+					</h6>
+				</div>
+			</div>
+		</div>
+	</div>
+			
+</body>
+</html>

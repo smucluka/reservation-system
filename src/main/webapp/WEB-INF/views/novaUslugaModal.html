@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" 
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<body>
+
+<div th:fragment="novaUslugaModal">
+ 
+ 	<!-- Button trigger modal -->
+	<button type="button" class="dodajKlasa btn btn-primary" data-toggle="modal" data-target="#dodajUsluguModal">
+	  Dodaj dodatnu uslugu
+	</button>
+	
+	<!-- Modal -->
+	<div class="modal fade" id="dodajUsluguModal" tabindex="-1" role="dialog" aria-labelledby="novaUslugaLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="novaUslugaLabel">Nova dodatna usluga</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	      	<form onsubmit = "return preSubmitModal()" class="col" action="#" th:action="@{/dodaj/usluga}" th:object="${novaUsluga}"  method="post">
+
+			<div class="row form-group">
+				<div class="col">
+					<label for="naz">Naziv usluge</label>
+			    	<input required type="text" class="form-control" id="naz" th:field="*{nazUsluge}">
+				</div>
+		 	</div>
+		 	<button type="submit" class="dodajKlasa btn btn-primary">Dodaj dodatnu uslugu</button>
+		 	<button type="button" class="btn btn-secondary" data-dismiss="modal">Odustani</button>
+			<br></br>
+		 	<div class="buttonTextId"></div>
+			</form>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+   
+	
+</div> 
+
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" 
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<body>
+
+<div th:fragment="noviTipModal">
+ 
+ 	<!-- Button trigger modal -->
+	<button type="button" class="dodajKlasa btn btn-primary" data-toggle="modal" data-target="#dodajTipModal">
+	  Dodaj tip smještajne jedinice
+	</button>
+	
+	<!-- Modal -->
+	<div class="modal fade" id="dodajTipModal" tabindex="-1" role="dialog" aria-labelledby="noviTipLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="noviTipLabel">Novi tip smještajne jedinice</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	      	<form onsubmit = "return preSubmitModal()" class="col" action="#" th:action="@{/dodaj/tip}" th:object="${noviTip}"  method="post" enctype="multipart/form-data">
+
+			<div class="row form-group">
+				<div class="col">
+					<label for="tip">Tip smještajne jedinice</label>
+			    	<input required type="text" class="form-control" id="tip" th:field="*{tipSmjestJed}">
+				</div>
+		 	</div>
+		 	<div class="row form-group">
+		 		<div class="col">
+			    	<label for="pogled">Pogled</label>
+			    	<input required type="text" class="form-control" id="pogled" th:field="*{pogled}">
+		 		</div>
+		 	</div>
+		 	<div class="row form-group">
+		 		<div class="col">
+			    	<label for="od">Kapacitet od</label>
+			    	<input required type="text" class="form-control" id="od" th:field="*{kapacitetOd}">
+		 		</div>
+		 		<div class="col">
+			    	<label for="do">Kapacitet do</label>
+			    	<input required type="text" class="form-control" id="do" th:field="*{kapacitetDo}">
+		 		</div>
+		 	</div>
+		 	<div class="row form-group">
+		 		<div class="col">
+			    	<label for="slike">Odaberite slike</label>
+			    	<input type="file" class="form-control" id="slike" name="file" multiple>
+		 		</div>
+		 	</div>
+		 	
+		 	<button type="submit" class="dodajKlasa btn btn-primary">Dodaj tip smještajne jedinice</button>
+		 	<button type="button" class="btn btn-secondary" data-dismiss="modal">Odustani</button>
+			<br></br>
+		 	<div class="buttonTextId"></div>
+			</form>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+   
+	
+</div> 
+
+</body>
+</html>

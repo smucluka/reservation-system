@@ -1,0 +1,284 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	layout:decorate="~{layouts/baseLayout}">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<title>Administratori</title>
+
+<style>
+.carousel-control-prev, .carousel-control-next {
+	width: 25%;
+}
+</style>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+	rel="stylesheet">
+<style>
+.bg-company-gray {
+	background-color: lightslategray;
+}
+</style>
+
+<script type="text/javascript">
+	function preSubmit() {
+		$('#textAppended').remove();
+		$(".ukloniKlasa").attr("disabled", true);
+		$(".urediKlasa").attr("disabled", true);
+		$(".dodajKlasa").attr("disabled", true);
+		$(".btnPromjeni").attr("disabled", true);
+		$('#infoTextId')
+				.append(
+						'<div id="textAppended" class="alert alert-success"><strong>Uklanjanje u tijeku.</strong> Molimo pričekajte...</div>');
+		return true;
+	};
+	function preSubmitModal() {
+		$('#textAppendedModal').remove();
+		$(".ukloniKlasa").attr("disabled", true);
+		$(".urediKlasa").attr("disabled", true);
+		$(".dodajModal").attr("disabled", true);
+		$(".btnPromjeni").attr("disabled", true);
+		$('#modalTextId')
+				.append(
+						'<div id="textAppendedModal" class="alert alert-success"><strong>Dodavanje u tijeku.</strong> Molimo pričekajte...</div>');
+		return true;
+	}
+	function preSubmitUredi() {
+		$('#textAppendedModal').remove();
+		$(".ukloniKlasa").attr("disabled", true);
+		$(".urediKlasa").attr("disabled", true);
+		$(".dodajModal").attr("disabled", true);
+		$(".btnPromjeni").attr("disabled", true);
+		$('.buttonText')
+				.append(
+						'<div id="textAppendedModal" class="alert alert-success"><strong>Promjena u tijeku.</strong> Molimo pričekajte...</div>');
+		return true;
+	}
+</script>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(".urediKlasa").click(function() {
+
+			var id = $(this).attr('id');
+
+			var ime = $('#i-' + id)["0"].innerText;
+			var prezime = $('#p-' + id)["0"].innerText;
+			var grad = $('#g-' + id)["0"].innerText;
+			var email = $('#e-' + id)["0"].innerText;
+			var drzava = $('#d-' + id)["0"].innerText;
+			var brtelefona = $('#br-' + id)["0"].innerText;
+			var ulicaKbr = $('#a-' + id)["0"].innerText;
+
+			$('#idKorisnikaAdmin').val(id);
+			$('#imeAdmin').val(ime);
+			$('#prezimeAdmin').val(prezime);
+			$('#emailAdmin').val(email);
+			$('#emailRealAdmin').val(email);
+			$('#drzavaAdmin').val(drzava);
+			$('#gradAdmin').val(grad);
+			$('#ulicaKbrAdmin').val(ulicaKbr);
+			$('#brTelefonaAdmin').val(brtelefona);
+		});
+	});
+</script>
+
+</head>
+<body>
+	<div layout:fragment="content">
+
+		<div class="container-fluid bg-secondary">
+			<div th:include="header :: header"></div>
+		</div>
+
+		<div class="container-fluid">
+			<div class="row">
+				<nav id="navId"
+					class="col-sm-3 col-md-2 d-none d-sm-block bg-light sidebar"
+					th:include="sidebar :: sidebar"></nav>
+
+				<main id="contentId" role="main"
+					class="col-sm-9 ml-sm-auto col-md-10 pt-3"> <br>
+				<br>
+				<div th:switch="${provjera}">
+					<div th:case="'1'" class="textAppendedError alert alert-danger">
+						<strong>Dogošlo je do pogreške! </strong>Provjerite podatke i pokušajte
+						ponovo.
+					</div>
+				</div>
+				<div th:switch="${aktiviraj}">
+					<div th:case="'1'" class="text-center alert alert-success">
+						<strong>Vaš zahtjev je uspješno izvršen! </strong>
+					</div>
+				</div>
+
+				<div id="infoTextId"></div>
+				<div class="row table-responsive justify-content-center" style="padding: 15px">
+					<table class="table" th:if="${not #lists.isEmpty(adminList)}">
+						<thead>
+							<tr>
+								<th>Ime</th>
+								<th>Prezime</th>
+								<th>Email</th>
+								<th>Država</th>
+								<th>Grad</th>
+								<th>Adresa</th>
+								<th>Broj telefona</th>
+								<th></th>
+							</tr>
+						</thead>
+
+						<tbody>
+							<tr th:each="admin : ${adminList}">
+								<td th:id="'i-'+${admin.idKorisnika}" th:text="${admin.ime}"></td>
+								<td th:id="'p-'+${admin.idKorisnika}" th:text="${admin.prezime}"></td>
+								<td th:id="'e-'+${admin.idKorisnika}" th:text="${admin.email}"></td>
+								<td th:id="'d-'+${admin.idKorisnika}" th:text="${admin.drzava}"></td>
+								<td th:id="'g-'+${admin.idKorisnika}" th:text="${admin.grad}"></td>
+								<td th:id="'a-'+${admin.idKorisnika}"
+									th:text="${admin.ulicaKbr}"></td>
+								<td th:id="'br-'+${admin.idKorisnika}"
+									th:text="${admin.brTelefona}"></td>
+								<td style="align: center;">
+
+									<div class="text-center">
+
+										<button style="margin-bottom: 5px;"
+											th:id="${admin.idKorisnika}" type="button"
+											class="urediKlasa btn btn-secondary" data-toggle="modal"
+											data-target="#urediModal">Uredi</button>
+
+										<form onsubmit="return preSubmit()" action="#"
+											th:action="@{'/ukloni/admin/' + ${admin.idKorisnika}}"
+											method="post">
+											<button type="submit" class="ukloniKlasa btn btn-danger">Ukloni</button>
+										</form>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+
+					</table>
+				</div>
+				<br>
+				<br>
+				<div class="row justify-content-center">
+
+					<div th:if="${#lists.size(adminList) < 3}"
+						th:include="noviAdminModal :: noviAdminModal"></div>
+
+				</div>
+				</main>
+			</div>
+		</div>
+
+
+		<div align="center">
+			<div class="modal fade" id="urediModal">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<form onsubmit="return preSubmitUredi()"
+							th:action="@{/uredi/admin}" method="post" th:object="${promjeniAdmin}">
+
+							<div class="modal-header">
+								<div style="margin: 0 auto;">
+									<h5 class="modal-title">Promjena osobnih podataka
+										administratora</h5>
+								</div>
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+							</div>
+
+							<div class="modal-body">
+								<div class="container">
+									<div class="row">
+										<div class="col-md-12">
+											<div class="well well-sm">
+												<div id="rowNow" class="row">
+
+													<input style="display: none;" th:value="*{idKorisnikaAdmin}"
+														name="idKorisnikaAdmin" id="idKorisnikaAdmin">
+
+													<div class="col-md-6">
+														<div class="form-group">
+															<label for="subject"> Ime </label> <input required
+																th:value="*{imeAdmin}" name="imeAdmin" id="imeAdmin"
+																class="form-control" type="text">
+														</div>
+													</div>
+
+													<div class="col-md-6">
+														<div class="form-group">
+															<label for="subject"> Prezime </label> <input required
+																th:value="*{prezimeAdmin}" name="prezimeAdmin" id="prezimeAdmin"
+																class="form-control" type="text">
+														</div>
+													</div>
+
+													<div class="col-md-6">
+														<div class="form-group">
+															<label for="subject"> Email </label> <input required
+																th:value="*{emailAdmin}" name="emailAdmin" id="emailAdmin"
+																class="form-control" type="email">
+														</div>
+													</div>
+													
+													<input style="display: none;" 
+																th:value="*{emailRealAdmin}" name="emailRealAdmin" id="emailRealAdmin"
+																class="form-control" type="text">
+
+													<div class="col-md-6">
+														<div class="form-group">
+															<label for="subject"> Država </label> <input required
+																th:value="*{drzavaAdmin}" name="drzavaAdmin" id="drzavaAdmin"
+																class="form-control" type="text">
+														</div>
+													</div>
+
+													<div class="col-md-6">
+														<div class="form-group">
+															<label for="subject"> Grad </label> <input required
+																th:value="*{gradAdmin}" name="gradAdmin" id="gradAdmin"
+																class="form-control" type="text">
+														</div>
+													</div>
+
+													<div class="col-md-6">
+														<div class="form-group">
+															<label for="subject"> Adresa </label> <input required
+																th:value="*{ulicaKbrAdmin}" name="ulicaKbrAdmin" id="ulicaKbrAdmin"
+																class="form-control" type="text">
+														</div>
+													</div>
+
+													<div class="col-md-6">
+														<div class="form-group">
+															<label for="subject"> Broj telefona </label> <input
+																th:value="*{brTelefonaAdmin}" name="brTelefonaAdmin"
+																id="brTelefonaAdmin" class="form-control" type="text">
+														</div>
+													</div>
+
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<div align="center" class="col-md-12">
+									<button class="btnPromjeni btn btn-primary pull-right"
+										id="btnPromijeni">Zatraži promjenu</button>
+									<br></br>
+									<div class="buttonText"></div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
